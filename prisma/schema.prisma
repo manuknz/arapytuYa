@@ -14,8 +14,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String         @id @default(cuid())
+  email     String         @unique
+  name      String?
+  avatarUrl String?
+  isActive  Boolean        @default(true)
+  favorites FavoriteCity[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
 
+model FavoriteCity {
+  id          String   @id @default(cuid())
+  name        String
+  countryCode String?
+  lat         Float?
+  lon         Float?
+  notes       String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-
-
-
+  @@unique([userId, name, countryCode])
+  @@index([userId])
+}
