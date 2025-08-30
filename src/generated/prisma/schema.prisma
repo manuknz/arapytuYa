@@ -15,10 +15,9 @@ datasource db {
 }
 
 model User {
-  id        String         @id @default(cuid())
+  id        Int            @id @default(autoincrement())
   email     String         @unique
   name      String?
-  avatarUrl String?
   isActive  Boolean        @default(true)
   favorites FavoriteCity[]
   createdAt DateTime       @default(now())
@@ -26,13 +25,13 @@ model User {
 }
 
 model FavoriteCity {
-  id          String   @id @default(cuid())
+  id          Int      @id @default(autoincrement())
   name        String
   countryCode String?
   lat         Float?
   lon         Float?
   notes       String?
-  userId      String
+  userId      Int
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

@@ -983,25 +983,33 @@ export namespace Prisma {
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
 
+  export type UserAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type UserSumAggregateOutputType = {
+    id: number | null
+  }
+
   export type UserMinAggregateOutputType = {
-    id: string | null
+    id: number | null
     email: string | null
     name: string | null
-    avatarUrl: string | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
-    id: string | null
+    id: number | null
     email: string | null
     name: string | null
-    avatarUrl: string | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -1011,7 +1019,6 @@ export namespace Prisma {
     id: number
     email: number
     name: number
-    avatarUrl: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -1019,11 +1026,18 @@ export namespace Prisma {
   }
 
 
+  export type UserAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type UserSumAggregateInputType = {
+    id?: true
+  }
+
   export type UserMinAggregateInputType = {
     id?: true
     email?: true
     name?: true
-    avatarUrl?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -1033,7 +1047,6 @@ export namespace Prisma {
     id?: true
     email?: true
     name?: true
-    avatarUrl?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -1043,7 +1056,6 @@ export namespace Prisma {
     id?: true
     email?: true
     name?: true
-    avatarUrl?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -1088,6 +1100,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserMinAggregateInputType
@@ -1118,19 +1142,22 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
+    _avg?: UserAvgAggregateInputType
+    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
   }
 
   export type UserGroupByOutputType = {
-    id: string
+    id: number
     email: string
     name: string | null
-    avatarUrl: string | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
@@ -1153,7 +1180,6 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
-    avatarUrl?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -1165,7 +1191,6 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
-    avatarUrl?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -1175,7 +1200,6 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
-    avatarUrl?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -1185,13 +1209,12 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
-    avatarUrl?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "avatarUrl" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     favorites?: boolean | User$favoritesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1205,10 +1228,9 @@ export namespace Prisma {
       favorites: Prisma.$FavoriteCityPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: string
+      id: number
       email: string
       name: string | null
-      avatarUrl: string | null
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -1636,10 +1658,9 @@ export namespace Prisma {
    * Fields of the User model
    */
   interface UserFieldRefs {
-    readonly id: FieldRef<"User", 'String'>
+    readonly id: FieldRef<"User", 'Int'>
     readonly email: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
-    readonly avatarUrl: FieldRef<"User", 'String'>
     readonly isActive: FieldRef<"User", 'Boolean'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
@@ -2086,35 +2107,39 @@ export namespace Prisma {
   }
 
   export type FavoriteCityAvgAggregateOutputType = {
+    id: number | null
     lat: number | null
     lon: number | null
+    userId: number | null
   }
 
   export type FavoriteCitySumAggregateOutputType = {
+    id: number | null
     lat: number | null
     lon: number | null
+    userId: number | null
   }
 
   export type FavoriteCityMinAggregateOutputType = {
-    id: string | null
+    id: number | null
     name: string | null
     countryCode: string | null
     lat: number | null
     lon: number | null
     notes: string | null
-    userId: string | null
+    userId: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type FavoriteCityMaxAggregateOutputType = {
-    id: string | null
+    id: number | null
     name: string | null
     countryCode: string | null
     lat: number | null
     lon: number | null
     notes: string | null
-    userId: string | null
+    userId: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2134,13 +2159,17 @@ export namespace Prisma {
 
 
   export type FavoriteCityAvgAggregateInputType = {
+    id?: true
     lat?: true
     lon?: true
+    userId?: true
   }
 
   export type FavoriteCitySumAggregateInputType = {
+    id?: true
     lat?: true
     lon?: true
+    userId?: true
   }
 
   export type FavoriteCityMinAggregateInputType = {
@@ -2267,13 +2296,13 @@ export namespace Prisma {
   }
 
   export type FavoriteCityGroupByOutputType = {
-    id: string
+    id: number
     name: string
     countryCode: string | null
     lat: number | null
     lon: number | null
     notes: string | null
-    userId: string
+    userId: number
     createdAt: Date
     updatedAt: Date
     _count: FavoriteCityCountAggregateOutputType | null
@@ -2365,13 +2394,13 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: string
+      id: number
       name: string
       countryCode: string | null
       lat: number | null
       lon: number | null
       notes: string | null
-      userId: string
+      userId: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["favoriteCity"]>
@@ -2798,13 +2827,13 @@ export namespace Prisma {
    * Fields of the FavoriteCity model
    */
   interface FavoriteCityFieldRefs {
-    readonly id: FieldRef<"FavoriteCity", 'String'>
+    readonly id: FieldRef<"FavoriteCity", 'Int'>
     readonly name: FieldRef<"FavoriteCity", 'String'>
     readonly countryCode: FieldRef<"FavoriteCity", 'String'>
     readonly lat: FieldRef<"FavoriteCity", 'Float'>
     readonly lon: FieldRef<"FavoriteCity", 'Float'>
     readonly notes: FieldRef<"FavoriteCity", 'String'>
-    readonly userId: FieldRef<"FavoriteCity", 'String'>
+    readonly userId: FieldRef<"FavoriteCity", 'Int'>
     readonly createdAt: FieldRef<"FavoriteCity", 'DateTime'>
     readonly updatedAt: FieldRef<"FavoriteCity", 'DateTime'>
   }
@@ -3239,7 +3268,6 @@ export namespace Prisma {
     id: 'id',
     email: 'email',
     name: 'name',
-    avatarUrl: 'avatarUrl',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -3293,6 +3321,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
    * Reference to a field of type 'String'
    */
   export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
@@ -3339,20 +3381,6 @@ export namespace Prisma {
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
-
-
-  /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
   /**
    * Deep Input Types
    */
@@ -3362,10 +3390,9 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    id?: StringFilter<"User"> | string
+    id?: IntFilter<"User"> | number
     email?: StringFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
-    avatarUrl?: StringNullableFilter<"User"> | string | null
     isActive?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -3376,7 +3403,6 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
-    avatarUrl?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -3384,13 +3410,12 @@ export namespace Prisma {
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
+    id?: number
     email?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringNullableFilter<"User"> | string | null
-    avatarUrl?: StringNullableFilter<"User"> | string | null
     isActive?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -3401,23 +3426,23 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
-    avatarUrl?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
+    _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
+    _sum?: UserSumOrderByAggregateInput
   }
 
   export type UserScalarWhereWithAggregatesInput = {
     AND?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     OR?: UserScalarWhereWithAggregatesInput[]
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"User"> | string
+    id?: IntWithAggregatesFilter<"User"> | number
     email?: StringWithAggregatesFilter<"User"> | string
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
-    avatarUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
     isActive?: BoolWithAggregatesFilter<"User"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -3427,13 +3452,13 @@ export namespace Prisma {
     AND?: FavoriteCityWhereInput | FavoriteCityWhereInput[]
     OR?: FavoriteCityWhereInput[]
     NOT?: FavoriteCityWhereInput | FavoriteCityWhereInput[]
-    id?: StringFilter<"FavoriteCity"> | string
+    id?: IntFilter<"FavoriteCity"> | number
     name?: StringFilter<"FavoriteCity"> | string
     countryCode?: StringNullableFilter<"FavoriteCity"> | string | null
     lat?: FloatNullableFilter<"FavoriteCity"> | number | null
     lon?: FloatNullableFilter<"FavoriteCity"> | number | null
     notes?: StringNullableFilter<"FavoriteCity"> | string | null
-    userId?: StringFilter<"FavoriteCity"> | string
+    userId?: IntFilter<"FavoriteCity"> | number
     createdAt?: DateTimeFilter<"FavoriteCity"> | Date | string
     updatedAt?: DateTimeFilter<"FavoriteCity"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -3453,7 +3478,7 @@ export namespace Prisma {
   }
 
   export type FavoriteCityWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
+    id?: number
     userId_name_countryCode?: FavoriteCityUserIdNameCountryCodeCompoundUniqueInput
     AND?: FavoriteCityWhereInput | FavoriteCityWhereInput[]
     OR?: FavoriteCityWhereInput[]
@@ -3463,7 +3488,7 @@ export namespace Prisma {
     lat?: FloatNullableFilter<"FavoriteCity"> | number | null
     lon?: FloatNullableFilter<"FavoriteCity"> | number | null
     notes?: StringNullableFilter<"FavoriteCity"> | string | null
-    userId?: StringFilter<"FavoriteCity"> | string
+    userId?: IntFilter<"FavoriteCity"> | number
     createdAt?: DateTimeFilter<"FavoriteCity"> | Date | string
     updatedAt?: DateTimeFilter<"FavoriteCity"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -3490,22 +3515,20 @@ export namespace Prisma {
     AND?: FavoriteCityScalarWhereWithAggregatesInput | FavoriteCityScalarWhereWithAggregatesInput[]
     OR?: FavoriteCityScalarWhereWithAggregatesInput[]
     NOT?: FavoriteCityScalarWhereWithAggregatesInput | FavoriteCityScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"FavoriteCity"> | string
+    id?: IntWithAggregatesFilter<"FavoriteCity"> | number
     name?: StringWithAggregatesFilter<"FavoriteCity"> | string
     countryCode?: StringNullableWithAggregatesFilter<"FavoriteCity"> | string | null
     lat?: FloatNullableWithAggregatesFilter<"FavoriteCity"> | number | null
     lon?: FloatNullableWithAggregatesFilter<"FavoriteCity"> | number | null
     notes?: StringNullableWithAggregatesFilter<"FavoriteCity"> | string | null
-    userId?: StringWithAggregatesFilter<"FavoriteCity"> | string
+    userId?: IntWithAggregatesFilter<"FavoriteCity"> | number
     createdAt?: DateTimeWithAggregatesFilter<"FavoriteCity"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"FavoriteCity"> | Date | string
   }
 
   export type UserCreateInput = {
-    id?: string
     email: string
     name?: string | null
-    avatarUrl?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -3513,10 +3536,9 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateInput = {
-    id?: string
+    id?: number
     email: string
     name?: string | null
-    avatarUrl?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -3524,10 +3546,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3535,10 +3555,9 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3546,37 +3565,32 @@ export namespace Prisma {
   }
 
   export type UserCreateManyInput = {
-    id?: string
+    id?: number
     email: string
     name?: string | null
-    avatarUrl?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type UserUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FavoriteCityCreateInput = {
-    id?: string
     name: string
     countryCode?: string | null
     lat?: number | null
@@ -3588,19 +3602,18 @@ export namespace Prisma {
   }
 
   export type FavoriteCityUncheckedCreateInput = {
-    id?: string
+    id?: number
     name: string
     countryCode?: string | null
     lat?: number | null
     lon?: number | null
     notes?: string | null
-    userId: string
+    userId: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type FavoriteCityUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     lat?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -3612,31 +3625,30 @@ export namespace Prisma {
   }
 
   export type FavoriteCityUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     lat?: NullableFloatFieldUpdateOperationsInput | number | null
     lon?: NullableFloatFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FavoriteCityCreateManyInput = {
-    id?: string
+    id?: number
     name: string
     countryCode?: string | null
     lat?: number | null
     lon?: number | null
     notes?: string | null
-    userId: string
+    userId: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type FavoriteCityUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     lat?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -3647,15 +3659,26 @@ export namespace Prisma {
   }
 
   export type FavoriteCityUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     lat?: NullableFloatFieldUpdateOperationsInput | number | null
     lon?: NullableFloatFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -3723,17 +3746,19 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
-    avatarUrl?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type UserAvgOrderByAggregateInput = {
+    id?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
-    avatarUrl?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -3743,10 +3768,29 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
-    avatarUrl?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type UserSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -3824,7 +3868,7 @@ export namespace Prisma {
   }
 
   export type FavoriteCityUserIdNameCountryCodeCompoundUniqueInput = {
-    userId: string
+    userId: number
     name: string
     countryCode: string
   }
@@ -3842,8 +3886,10 @@ export namespace Prisma {
   }
 
   export type FavoriteCityAvgOrderByAggregateInput = {
+    id?: SortOrder
     lat?: SortOrder
     lon?: SortOrder
+    userId?: SortOrder
   }
 
   export type FavoriteCityMaxOrderByAggregateInput = {
@@ -3871,8 +3917,10 @@ export namespace Prisma {
   }
 
   export type FavoriteCitySumOrderByAggregateInput = {
+    id?: SortOrder
     lat?: SortOrder
     lon?: SortOrder
+    userId?: SortOrder
   }
 
   export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -3935,6 +3983,14 @@ export namespace Prisma {
     deleteMany?: FavoriteCityScalarWhereInput | FavoriteCityScalarWhereInput[]
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type FavoriteCityUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<FavoriteCityCreateWithoutUserInput, FavoriteCityUncheckedCreateWithoutUserInput> | FavoriteCityCreateWithoutUserInput[] | FavoriteCityUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FavoriteCityCreateOrConnectWithoutUserInput | FavoriteCityCreateOrConnectWithoutUserInput[]
@@ -3969,6 +4025,17 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutFavoritesInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFavoritesInput, UserUpdateWithoutFavoritesInput>, UserUncheckedUpdateWithoutFavoritesInput>
+  }
+
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -4015,6 +4082,33 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -4030,17 +4124,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -4121,7 +4204,6 @@ export namespace Prisma {
   }
 
   export type FavoriteCityCreateWithoutUserInput = {
-    id?: string
     name: string
     countryCode?: string | null
     lat?: number | null
@@ -4132,7 +4214,7 @@ export namespace Prisma {
   }
 
   export type FavoriteCityUncheckedCreateWithoutUserInput = {
-    id?: string
+    id?: number
     name: string
     countryCode?: string | null
     lat?: number | null
@@ -4172,32 +4254,29 @@ export namespace Prisma {
     AND?: FavoriteCityScalarWhereInput | FavoriteCityScalarWhereInput[]
     OR?: FavoriteCityScalarWhereInput[]
     NOT?: FavoriteCityScalarWhereInput | FavoriteCityScalarWhereInput[]
-    id?: StringFilter<"FavoriteCity"> | string
+    id?: IntFilter<"FavoriteCity"> | number
     name?: StringFilter<"FavoriteCity"> | string
     countryCode?: StringNullableFilter<"FavoriteCity"> | string | null
     lat?: FloatNullableFilter<"FavoriteCity"> | number | null
     lon?: FloatNullableFilter<"FavoriteCity"> | number | null
     notes?: StringNullableFilter<"FavoriteCity"> | string | null
-    userId?: StringFilter<"FavoriteCity"> | string
+    userId?: IntFilter<"FavoriteCity"> | number
     createdAt?: DateTimeFilter<"FavoriteCity"> | Date | string
     updatedAt?: DateTimeFilter<"FavoriteCity"> | Date | string
   }
 
   export type UserCreateWithoutFavoritesInput = {
-    id?: string
     email: string
     name?: string | null
-    avatarUrl?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type UserUncheckedCreateWithoutFavoritesInput = {
-    id?: string
+    id?: number
     email: string
     name?: string | null
-    avatarUrl?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4220,27 +4299,24 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutFavoritesInput = {
-    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateWithoutFavoritesInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FavoriteCityCreateManyUserInput = {
-    id?: string
+    id?: number
     name: string
     countryCode?: string | null
     lat?: number | null
@@ -4251,7 +4327,6 @@ export namespace Prisma {
   }
 
   export type FavoriteCityUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     lat?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -4262,7 +4337,7 @@ export namespace Prisma {
   }
 
   export type FavoriteCityUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     lat?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -4273,7 +4348,7 @@ export namespace Prisma {
   }
 
   export type FavoriteCityUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     lat?: NullableFloatFieldUpdateOperationsInput | number | null

@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "public"."User" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT,
     "avatarUrl" TEXT,
@@ -13,13 +13,13 @@ CREATE TABLE "public"."User" (
 
 -- CreateTable
 CREATE TABLE "public"."FavoriteCity" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "countryCode" TEXT,
     "lat" DOUBLE PRECISION,
     "lon" DOUBLE PRECISION,
     "notes" TEXT,
-    "userId" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
