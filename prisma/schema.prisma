@@ -21,6 +21,7 @@ model User {
   favorites FavoriteCity[]
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
+  password  String         @default("arapypass2025")
 }
 
 model FavoriteCity {
