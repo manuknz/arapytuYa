@@ -6,9 +6,17 @@ const prisma = new PrismaClient();
 // CRUD Básico
 
 // Listar Users
-export const getUsers = async (req: Request, res: Response) => {
-  const users = await prisma.user.findMany();
-  res.json(users);
+export const getUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const users = await prisma.user.findMany();
+    res.json(users);
+  } catch (error) {
+    next(error);
+  }
 };
 
 // Crear user
@@ -65,45 +73,41 @@ export const deleteUser = async (
 
 // Consultas avanzadas
 // Filter
-export const filterUser = async (req: Request, res: Response) => {
-  const { nombre } = req.params;
-  const listadoUser = await prisma.user.findMany({
-    where: {
-      name: {
-        contains: nombre,
-        mode: "insensitive",
+export const filterUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { nombre } = req.params;
+    const listadoUser = await prisma.user.findMany({
+      where: {
+        name: {
+          contains: nombre,
+          mode: "insensitive",
+        },
       },
-    },
-  });
-  res.json(listadoUser);
+    });
+    res.json(listadoUser);
+  } catch (error) {
+    next(error);
+  }
 };
 
 // OrderBy
-export const ordenUser = async (req: Request, res: Response) => {
-  // Permitir elegir campo y dirección desde query params con validación básica
-  const allowedFields = new Set<keyof User>([
-    "id",
-    "email",
-    "name",
-    "isActive",
-    "createdAt",
-    "updatedAt",
-  ]);
-
-  const fieldRaw = String(req.query.field ?? "name");
-  const dirRaw = String(req.query.dir ?? "desc").toLowerCase();
-
-  const field = allowedFields.has(fieldRaw as any)
-    ? (fieldRaw as keyof User)
-    : "name";
-  const direction: "asc" | "desc" = dirRaw === "asc" ? "asc" : "desc";
-
-  const orderBy: any = { [field]: direction };
-
-  const listadoUserOrdenado = await prisma.user.findMany({
-    orderBy,
-  });
-  res.json(listadoUserOrdenado);
+export const ordenUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const listadoUserOrdenado = await prisma.user.findMany({
+      orderBy: getOrderBy(req),
+    });
+    res.json(listadoUserOrdenado);
+  } catch (error) {
+    next(error);
+  }
 };
 
 // List paginations
@@ -127,7 +131,7 @@ export const paginacionUser = async (
       prisma.user.findMany({
         skip,
         take: pageSize,
-        orderBy: { id: "asc" },
+        orderBy: getOrderBy(req),
       }),
     ]);
 
@@ -146,3 +150,24 @@ export const paginacionUser = async (
     next(error);
   }
 };
+
+function getOrderBy(req: Request): any {
+  const allowedFields = new Set<keyof User>([
+    "id",
+    "email",
+    "name",
+    "isActive",
+    "createdAt",
+    "updatedAt",
+  ]);
+
+  const fieldRaw = String(req.query.field ?? "name");
+  const dirRaw = String(req.query.dir ?? "desc").toLowerCase();
+
+  const field = allowedFields.has(fieldRaw as any)
+    ? (fieldRaw as keyof User)
+    : "name";
+  const direction: "asc" | "desc" = dirRaw === "asc" ? "asc" : "desc";
+
+  return { [field]: direction };
+}
