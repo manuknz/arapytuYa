@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { BadRequestError } from "../errors/httpErrors";
 
 const prisma = new PrismaClient();
 
@@ -27,8 +28,21 @@ export const createUser = async (
   next: NextFunction
 ) => {
   try {
-    console.log(req.body);
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body ?? {};
+
+    // Validación de campos requeridos
+    const missing: string[] = [];
+    if (!name || String(name).trim() === "") missing.push("name");
+    if (!email || String(email).trim() === "") missing.push("email");
+    if (!password || String(password).trim() === "") missing.push("password");
+    if (missing.length > 0) {
+      const msg =
+        missing.length === 1
+          ? `El campo '${missing[0]}' es requerido`
+          : `Los campos siguientes son requeridos: ${missing.join(", ")}`;
+      throw new BadRequestError(msg);
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
       data: { name, email, password: hashedPassword },
