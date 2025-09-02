@@ -14,7 +14,7 @@ const prisma = new PrismaClient();
 app.use(express.json());
 app.use(logger);
 app.use(cors());
-app.use("/api/login", loginRoutes);
+app.use("/api", loginRoutes);
 app.use("/api", userRoutes);
 app.use("/api", favoriteRoutes);
 

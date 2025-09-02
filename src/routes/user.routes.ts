@@ -12,14 +12,14 @@ import { verifyToken } from "../middlewares/auth";
 
 const router = Router();
 
-router.get("/users", getUsers, verifyToken);
-router.post("/users", createUser, verifyToken);
-router.put("/users/:id", updateUser, verifyToken);
-router.delete("/users/:id", deleteUser, verifyToken);
+router.get("/users", verifyToken, getUsers);
+router.post("/users", verifyToken, createUser);
+router.put("/users/:id", verifyToken, updateUser);
+router.delete("/users/:id", verifyToken, deleteUser);
 
 // Consultas avanzadas
-router.get("/users/filter/:nombre", filterUser, verifyToken);
-router.get("/users/order", ordenUser, verifyToken);
-router.get("/users/page", paginacionUser, verifyToken);
+router.get("/users/filter/:nombre", verifyToken, filterUser);
+router.get("/users/order", verifyToken, ordenUser);
+router.get("/users/page", verifyToken, paginacionUser);
 
 export default router;
