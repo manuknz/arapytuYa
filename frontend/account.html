@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro - ArapytuYa</title>
+    <!-- Tailwind CSS para un diseño rápido y moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts para una tipografía elegante -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Usar la fuente Inter como predeterminada */
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Estilo para el fondo con un gradiente sutil de cielo */
+      .sky-gradient {
+        background-color: #87ceeb; /* Sky Blue */
+        background-image: linear-gradient(to top, #a1c4fd 0%, #c2e9fb 100%);
+      }
+    </style>
+  </head>
+  <body class="sky-gradient">
+    <div class="min-h-screen flex items-center justify-center p-4">
+      <div
+        class="w-full max-w-4xl bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden md:grid md:grid-cols-2"
+      >
+        <!-- Columna Izquierda: Branding y Logo (Visible en pantallas medianas y grandes) -->
+        <div
+          class="hidden md:flex flex-col items-center justify-center p-12 bg-blue-500/10"
+        >
+          <!-- Logo SVG: Sol detrás de una nube -->
+          <div class="w-32 h-32 mb-4">
+            <svg
+              viewBox="0 0 120 120"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="60" cy="60" r="40" fill="#FFC700" />
+              <path
+                d="M93.3333 80C103.333 80 110 72.2843 110 62.5C110 52.7157 103.333 45 93.3333 45C92.1223 45 90.9416 45.1119 89.8018 45.3217C86.4173 35.881 77.3697 30 66.6667 30C52.4873 30 41.1111 41.1929 41.1111 55C41.1111 55.421 41.134 55.8385 41.1788 56.252C34.4913 58.113 30 64.2754 30 71.25C30 79.9477 37.3858 87.5 46.6667 87.5L93.3333 87.5C93.3333 87.5 93.3333 80 93.3333 80Z"
+                fill="white"
+                stroke="#E5E7EB"
+                stroke-width="2"
+              />
+            </svg>
+          </div>
+          <h1 class="text-4xl font-bold text-gray-800">ArapytuYa</h1>
+          <p class="mt-2 text-gray-600 text-center">
+            Tu pronóstico del tiempo, al instante.
+          </p>
+        </div>
+
+        <!-- Columna Derecha: Formulario de Registro -->
+        <div class="p-8 md:p-12">
+          <div class="md:hidden flex flex-col items-center mb-6">
+            <!-- Logo para vista móvil -->
+            <div class="w-16 h-16 mb-2">
+              <svg
+                viewBox="0 0 120 120"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="60" cy="60" r="40" fill="#FFC700" />
+                <path
+                  d="M93.3333 80C103.333 80 110 72.2843 110 62.5C110 52.7157 103.333 45 93.3333 45C92.1223 45 90.9416 45.1119 89.8018 45.3217C86.4173 35.881 77.3697 30 66.6667 30C52.4873 30 41.1111 41.1929 41.1111 55C41.1111 55.421 41.134 55.8385 41.1788 56.252C34.4913 58.113 30 64.2754 30 71.25C30 79.9477 37.3858 87.5 46.6667 87.5L93.3333 87.5C93.3333 87.5 93.3333 80 93.3333 80Z"
+                  fill="white"
+                  stroke="#E5E7EB"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800">ArapytuYa</h1>
+          </div>
+
+          <h2 class="text-2xl font-bold text-gray-800 mb-1 text-center">
+            Crea tu cuenta
+          </h2>
+          <p class="text-gray-600 mb-6 text-center">
+            Completa los campos para unirte
+          </p>
+
+          <form id="registerForm" action="#" method="POST">
+            <div class="space-y-4">
+              <div>
+                <label
+                  for="username"
+                  class="block text-sm font-medium text-gray-700"
+                  >Nombre de usuario</label
+                >
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  class="mt-1 w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  placeholder="tu-usuario"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="email"
+                  class="block text-sm font-medium text-gray-700"
+                  >Correo electrónico</label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="mt-1 w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  placeholder="tu@email.com"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="password"
+                  class="block text-sm font-medium text-gray-700"
+                  >Contraseña</label
+                >
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  class="mt-1 w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="confirm-password"
+                  class="block text-sm font-medium text-gray-700"
+                  >Confirmar contraseña</label
+                >
+                <input
+                  type="password"
+                  id="confirm-password"
+                  name="confirm-password"
+                  class="mt-1 w-full p-3 bg-gray-100 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+
+              <div>
+                <button
+                  id="registerBtn"
+                  type="submit"
+                  class="w-full flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  <span
+                    id="registerSpinner"
+                    class="hidden w-5 h-5 border-2 border-white/60 border-t-white rounded-full animate-spin"
+                  ></span>
+                  <span id="registerText">Crear Cuenta</span>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <div
+            id="registerMsg"
+            class="hidden mt-4 p-3 rounded-lg text-sm font-medium"
+          ></div>
+
+          <!-- Divisor "O continúa con" -->
+          <div class="hidden flex items-center my-6">
+            <div class="flex-grow border-t border-gray-300"></div>
+            <span class="mx-4 text-sm font-medium text-gray-500"
+              >O regístrate con</span
+            >
+            <div class="flex-grow border-t border-gray-300"></div>
+          </div>
+
+          <!-- Opciones de Login Social -->
+          <div class="hidden flex flex-col sm:flex-row gap-4">
+            <!-- Botón Google -->
+            <button
+              class="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg p-3 hover:bg-gray-50 transition-colors"
+            >
+              <svg class="w-5 h-5" viewBox="0 0 48 48">
+                <path
+                  fill="#FFC107"
+                  d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
+                ></path>
+                <path
+                  fill="#FF3D00"
+                  d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"
+                ></path>
+                <path
+                  fill="#4CAF50"
+                  d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
+                ></path>
+                <path
+                  fill="#1976D2"
+                  d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C42.021,35.591,44,30.138,44,24C44,22.659,43.862,21.35,43.611,20.083z"
+                ></path>
+              </svg>
+              <span class="text-sm font-medium text-gray-700">Google</span>
+            </button>
+            <!-- Botón Facebook -->
+            <button
+              class="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg p-3 hover:bg-gray-50 transition-colors"
+            >
+              <svg
+                class="w-5 h-5 text-[#1877F2]"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V21.878C18.343 21.128 22 16.991 22 12z"
+                ></path>
+              </svg>
+              <span class="text-sm font-medium text-gray-700">Facebook</span>
+            </button>
+          </div>
+
+          <p class="mt-8 text-center text-sm text-gray-600">
+            ¿Ya tienes una cuenta?
+            <a
+              href="index.html"
+              class="font-medium text-blue-600 hover:underline"
+              >Inicia sesión aquí</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Integración de creación de usuario
+      const form = document.getElementById("registerForm");
+      const btn = document.getElementById("registerBtn");
+      const spinner = document.getElementById("registerSpinner");
+      const btnText = document.getElementById("registerText");
+      const msgBox = document.getElementById("registerMsg");
+
+      function setLoading(loading) {
+        if (loading) {
+          btn.disabled = true;
+          spinner.classList.remove("hidden");
+          btnText.textContent = "Creando...";
+        } else {
+          btn.disabled = false;
+          spinner.classList.add("hidden");
+          btnText.textContent = "Crear Cuenta";
+        }
+      }
+
+      function showMessage(text, type = "error") {
+        msgBox.textContent = text;
+        msgBox.className = "mt-4 p-3 rounded-lg text-sm font-medium";
+        if (type === "error") {
+          msgBox.classList.add(
+            "bg-red-50",
+            "border",
+            "border-red-300",
+            "text-red-700"
+          );
+        } else if (type === "success") {
+          msgBox.classList.add(
+            "bg-green-50",
+            "border",
+            "border-green-300",
+            "text-green-700"
+          );
+        } else {
+          msgBox.classList.add(
+            "bg-gray-50",
+            "border",
+            "border-gray-300",
+            "text-gray-700"
+          );
+        }
+        msgBox.classList.remove("hidden");
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        msgBox.classList.add("hidden");
+        msgBox.textContent = "";
+
+        const name = document.getElementById("username").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPassword =
+          document.getElementById("confirm-password").value;
+
+        if (!name || !email || !password || !confirmPassword) {
+          showMessage("Todos los campos son obligatorios.");
+          return;
+        }
+        if (password !== confirmPassword) {
+          showMessage("Las contraseñas no coinciden.");
+          return;
+        }
+        if (password.length < 6) {
+          showMessage("La contraseña debe tener al menos 6 caracteres.");
+          return;
+        }
+
+        setLoading(true);
+        try {
+          // IMPORTANTE: en backend la ruta POST /api/users requiere token actualmente.
+          // Si se quiere permitir registro público, quitar verifyToken en user.routes.ts para POST o crear una ruta /api/register.
+          const res = await fetch("/api/users", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              // Intentar usar token si usuario vino logueado (admin creando cuentas)
+              ...(localStorage.getItem("token")
+                ? { Authorization: `Bearer ${localStorage.getItem("token")}` }
+                : {}),
+            },
+            body: JSON.stringify({ name, email, password }),
+          });
+
+          if (res.ok) {
+            showMessage(
+              "Cuenta creada correctamente. Redirigiendo al login...",
+              "success"
+            );
+            setTimeout(() => {
+              window.location.href = "index.html"; // volver al login
+            }, 1500);
+          } else if (res.status === 401) {
+            showMessage(
+              "No autorizado. Inicia sesión primero o habilita registro público."
+            );
+          } else {
+            let errorMsg = "Error al crear la cuenta.";
+            try {
+              const data = await res.json();
+              if (data?.error) errorMsg = data.error;
+            } catch {}
+            showMessage(errorMsg);
+          }
+        } catch (err) {
+          showMessage("Error de red. Revisá tu conexión.");
+        } finally {
+          setLoading(false);
+        }
+      });
+    </script>
+  </body>
+</html>
