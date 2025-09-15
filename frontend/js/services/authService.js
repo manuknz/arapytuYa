@@ -1,8 +1,7 @@
 // Servicio de autenticación
 // Responsabilidad: manejar las llamadas HTTP relacionadas a auth.
 // Devuelve objetos estructurados para que la capa de UI no tenga que conocer detalles del fetch.
-
-const API_BASE_URL = "http://localhost:3000/api";
+import { API_BASE_URL } from "../config.js";
 
 /**
  * Realiza login contra la API.
@@ -23,11 +22,10 @@ export async function loginRequest(email, password) {
     try {
       data = await res.json();
     } catch (_) {
-      // Ignoramos error de parseo, puede ser texto plano
+      /* ignorar */
     }
 
     if (!res.ok) {
-      // Buscamos un mensaje de error amistoso
       const errorMessage =
         (data && (data.error || data.message)) || `Error ${res.status}`;
       return { ok: false, error: errorMessage };
