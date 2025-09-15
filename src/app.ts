@@ -28,6 +28,11 @@ app.use(
 const staticDir = path.resolve(__dirname, "../frontend");
 app.use(express.static(staticDir));
 
+// Accesos directos útiles
+app.get(["/", "/my_favorite_cities"], (_req, res) =>
+  res.sendFile(path.join(staticDir, "my_favorite_cities.html"))
+);
+
 app.use("/api", loginRoutes);
 app.use("/api", userRoutes);
 app.use("/api", favoriteRoutes);

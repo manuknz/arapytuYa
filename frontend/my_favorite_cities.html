@@ -48,7 +48,7 @@
         <div
           class="flex items-center gap-3 p-4 bg-white/50 backdrop-blur-sm rounded-2xl"
         >
-          <div class="w-12 h-12">
+          <div class="w-12 h-12 flex-shrink-0">
             <svg
               viewBox="0 0 120 120"
               fill="none"
@@ -63,9 +63,32 @@
               />
             </svg>
           </div>
-          <div>
-            <h1 class="text-xl font-bold">ArapytuYa</h1>
-            <p class="text-sm text-gray-600">Usuario de Prueba</p>
+          <div class="flex-grow flex justify-between items-center">
+            <div>
+              <h1 class="text-xl font-bold">ArapytuYa</h1>
+              <p class="text-sm text-gray-600">Usuario de Prueba</p>
+            </div>
+            <button
+              id="logout-btn"
+              title="Cerrar Sesión"
+              class="text-gray-500 hover:text-red-500 transition p-2 rounded-full"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -365,6 +388,7 @@
         const searchForm = document.getElementById("search-form");
         const searchInput = document.getElementById("search-input");
         const getLocationBtn = document.getElementById("get-location-btn");
+        const logoutBtn = document.getElementById("logout-btn");
         const favoritesList = document.getElementById("favorites-list");
         const addFavoriteBtn = document.getElementById("add-favorite-btn");
 
@@ -655,6 +679,13 @@
             handleSearch(city);
             searchInput.value = "";
           }
+        });
+
+        logoutBtn.addEventListener("click", () => {
+          console.log("Cerrando sesión...");
+          // En una aplicación real, se limpiarían tokens de sesión, etc.
+          // Para este demo, simplemente redirigimos a la página de login.
+          window.location.href = "index.html"; // Asegúrate de que este archivo exista.
         });
 
         addFavoriteBtn.addEventListener("click", () => {
