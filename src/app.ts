@@ -7,6 +7,7 @@ import { logger } from "./middlewares/logger";
 import favoriteRoutes from "./routes/favoriteCity.routes";
 import loginRoutes from "./routes/login.routes";
 import userRoutes from "./routes/user.routes";
+import weatherRoutes from "./routes/weather.routes";
 
 const app = express();
 const prisma = new PrismaClient();
@@ -17,6 +18,7 @@ app.use(cors());
 app.use("/api", loginRoutes);
 app.use("/api", userRoutes);
 app.use("/api", favoriteRoutes);
+app.use("/api", weatherRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
