@@ -205,7 +205,9 @@
 
           <p class="mt-8 text-center text-sm text-gray-600">
             ¿No tienes una cuenta?
-            <a href="#" class="font-medium text-blue-600 hover:underline"
+            <a
+              href="account.html"
+              class="font-medium text-blue-600 hover:underline"
               >Regístrate aquí</a
             >
           </p>
@@ -272,8 +274,8 @@
             // Guardar token en localStorage
             localStorage.setItem("token", token);
             localStorage.setItem("userId", userId);
-            // Redirigir a reservas
-            window.location.href = "reserva.html";
+            // Redirigir a my_favorite_cities.html
+            window.location.href = "my_favorite_cities.html";
           } else {
             const errorText = await res.text().error;
             outputEl.textContent = errorText || "Error al iniciar sesión.";

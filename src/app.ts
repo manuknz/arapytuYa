@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { PrismaClient } from "@prisma/client";
+import path from "path";
 import { errorHandler } from "./middlewares/errorHandler";
 import { notFoundHandler } from "./errors/httpErrors";
 import { logger } from "./middlewares/logger";
@@ -9,11 +9,24 @@ import loginRoutes from "./routes/login.routes";
 import userRoutes from "./routes/user.routes";
 
 const app = express();
-const prisma = new PrismaClient();
 
 app.use(express.json());
 app.use(logger);
-app.use(cors());
+
+// CORS con Authorization y preflight
+app.use(
+  cors({
+    origin: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 204,
+  })
+);
+
+// Servir frontend estático (mismo origen http://localhost:3000)
+const staticDir = path.resolve(__dirname, "../frontend");
+app.use(express.static(staticDir));
+
 app.use("/api", loginRoutes);
 app.use("/api", userRoutes);
 app.use("/api", favoriteRoutes);

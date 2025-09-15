@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard del Clima - ArapytuYa</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide-react@latest/dist/lucide-react.js"></script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .sky-gradient {
+        background-color: #87ceeb;
+        background-image: linear-gradient(to top, #a1c4fd 0%, #c2e9fb 100%);
+      }
+      /* Custom scrollbar for favorites list */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.3);
+      }
+    </style>
+  </head>
+  <body class="sky-gradient text-gray-800">
+    <div class="min-h-screen flex flex-col lg:flex-row p-4 gap-4">
+      <!-- Columna Izquierda: Favoritos y Búsqueda -->
+      <aside class="w-full lg:w-1/4 xl:w-1/5 flex flex-col gap-4">
+        <!-- Logo y Nombre -->
+        <div
+          class="flex items-center gap-3 p-4 bg-white/50 backdrop-blur-sm rounded-2xl"
+        >
+          <div class="w-12 h-12">
+            <svg
+              viewBox="0 0 120 120"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="60" cy="60" r="40" fill="#FFC700" />
+              <path
+                d="M93.3333 80C103.333 80 110 72.2843 110 62.5C110 52.7157 103.333 45 93.3333 45C92.1223 45 90.9416 45.1119 89.8018 45.3217C86.4173 35.881 77.3697 30 66.6667 30C52.4873 30 41.1111 41.1929 41.1111 55C41.1111 55.421 41.134 55.8385 41.1788 56.252C34.4913 58.113 30 64.2754 30 71.25C30 79.9477 37.3858 87.5 46.6667 87.5L93.3333 87.5C93.3333 87.5 93.3333 80 93.3333 80Z"
+                fill="white"
+                stroke="#E5E7EB"
+                stroke-width="2"
+              />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold">ArapytuYa</h1>
+            <p class="text-sm text-gray-600">Usuario de Prueba</p>
+          </div>
+        </div>
+
+        <!-- Búsqueda -->
+        <div class="flex items-center gap-2">
+          <form id="search-form" class="relative grow">
+            <input
+              id="search-input"
+              type="text"
+              placeholder="Buscar ciudad..."
+              class="w-full p-3 pl-10 bg-white/50 backdrop-blur-sm rounded-2xl border-0 focus:ring-2 focus:ring-blue-500 outline-none transition"
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </form>
+          <button
+            id="get-location-btn"
+            title="Usar mi ubicación actual"
+            class="flex-shrink-0 p-3 bg-white/50 backdrop-blur-sm rounded-2xl hover:bg-white/70 transition"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="text-gray-600"
+            >
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Lista de Favoritos -->
+        <div class="flex-grow p-4 bg-white/50 backdrop-blur-sm rounded-2xl">
+          <h2 class="font-bold mb-4">Ciudades Favoritas</h2>
+          <div
+            id="favorites-list"
+            class="h-64 lg:h-full overflow-y-auto custom-scrollbar pr-2 space-y-2"
+          >
+            <!-- Las ciudades favoritas se insertarán aquí -->
+            <p class="text-gray-500 text-sm">
+              Aún no tienes favoritos. ¡Busca una ciudad y agrégala!
+            </p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Columna Derecha: Contenido Principal del Clima -->
+      <main
+        class="w-full lg:w-3/4 xl:w-4/5 bg-white/30 backdrop-blur-sm rounded-2xl p-6 md:p-8 flex flex-col"
+      >
+        <!-- Estado de carga/error -->
+        <div
+          id="loader"
+          class="flex-grow flex flex-col items-center justify-center text-center hidden"
+        >
+          <svg
+            class="animate-spin h-10 w-10 text-blue-500 mb-4"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          <p class="font-medium">Consultando el cielo...</p>
+        </div>
+        <div
+          id="error-message"
+          class="flex-grow flex flex-col items-center justify-center text-center hidden"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="text-red-500 mb-4"
+          >
+            <path
+              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+            ></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <p class="font-medium text-lg">Oops, algo salió mal.</p>
+          <p id="error-text" class="text-gray-600">
+            No pudimos encontrar esa ciudad. Intenta de nuevo.
+          </p>
+        </div>
+
+        <!-- Contenido del Clima -->
+        <div id="weather-content" class="flex-grow flex flex-col">
+          <!-- Header: Ciudad y Hora -->
+          <div class="flex justify-between items-start mb-6">
+            <div>
+              <h2 id="city-name" class="text-3xl md:text-4xl font-bold">
+                Cargando...
+              </h2>
+              <p id="current-time" class="text-gray-600">--</p>
+            </div>
+            <button
+              id="add-favorite-btn"
+              class="flex items-center gap-2 py-2 px-4 bg-white/60 hover:bg-white/90 rounded-full transition shadow"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                ></path>
+              </svg>
+              <span class="font-medium text-sm hidden md:inline"
+                >Agregar a Favoritos</span
+              >
+            </button>
+          </div>
+
+          <!-- Principal: Temperatura e Icono -->
+          <div
+            class="flex-grow flex flex-col md:flex-row items-center justify-center text-center md:text-left gap-8 my-8"
+          >
+            <div
+              id="weather-icon-main"
+              class="w-32 h-32 md:w-48 md:h-48 text-yellow-400"
+            >
+              <!-- Icono SVG del clima se insertará aquí -->
+            </div>
+            <div>
+              <p
+                id="current-temp"
+                class="text-7xl md:text-8xl font-black tracking-tighter"
+              >
+                29°C
+              </p>
+              <p id="weather-condition" class="text-2xl font-medium">
+                Parcialmente Nublado
+              </p>
+              <p id="high-low-temp" class="text-gray-600">
+                Max: 32° / Min: 22°
+              </p>
+            </div>
+          </div>
+
+          <!-- Detalles y Pronóstico -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-auto">
+            <!-- Detalles Adicionales -->
+            <div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6">
+              <h3 class="font-bold mb-4">Detalles del Clima</h3>
+              <div class="grid grid-cols-2 gap-4 text-sm">
+                <div class="flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="text-blue-500"
+                  >
+                    <path
+                      d="M22 12h-4.42a4.42 4.42 0 0 0-8.24 2A4.42 4.42 0 0 0 6.42 12H2"
+                    />
+                  </svg>
+                  <span id="humidity">Humedad: 68%</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="text-gray-500"
+                  >
+                    <path d="M17.7 7.7a2.5 2.5 0 1 1-5 0" />
+                    <path d="M21 12a9 9 0 1 1-18 0" />
+                    <path d="M12 12v9" />
+                    <path d="M17 17a5 5 0 0 0-10 0" />
+                  </svg>
+                  <span id="pressure">Presión: 1012 hPa</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="text-green-500"
+                  >
+                    <path d="M21.5 12H19c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h2.5" />
+                    <path
+                      d="M12.5 2c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h0c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2h0z"
+                    />
+                    <path d="M2.5 12H5c1.1 0 2 .9 2 2v2c0 1.1-.9 2-2 2H2.5" />
+                  </svg>
+                  <span id="visibility">Visibilidad: 10 km</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="text-purple-500"
+                  >
+                    <path d="M12 2v2" />
+                    <path d="M12 20v2" />
+                    <path d="m4.93 4.93 1.41 1.41" />
+                    <path d="m17.66 17.66 1.41 1.41" />
+                    <path d="M2 12h2" />
+                    <path d="M20 12h2" />
+                    <path d="m6.34 17.66-1.41 1.41" />
+                    <path d="m19.07 4.93-1.41 1.41" />
+                  </svg>
+                  <span id="uv-index">Índice UV: Alto</span>
+                </div>
+              </div>
+            </div>
+            <!-- Pronóstico 4 Días -->
+            <div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6">
+              <h3 class="font-bold mb-4">Pronóstico Próximos Días</h3>
+              <div
+                id="forecast-container"
+                class="flex justify-between items-center text-center"
+              >
+                <!-- El pronóstico se insertará aquí -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- REFERENCIAS AL DOM ---
+        const searchForm = document.getElementById("search-form");
+        const searchInput = document.getElementById("search-input");
+        const getLocationBtn = document.getElementById("get-location-btn");
+        const favoritesList = document.getElementById("favorites-list");
+        const addFavoriteBtn = document.getElementById("add-favorite-btn");
+
+        const loader = document.getElementById("loader");
+        const errorMessage = document.getElementById("error-message");
+        const errorText = document.getElementById("error-text");
+        const weatherContent = document.getElementById("weather-content");
+
+        const cityNameEl = document.getElementById("city-name");
+        const currentTimeEl = document.getElementById("current-time");
+        const weatherIconMainEl = document.getElementById("weather-icon-main");
+        const currentTempEl = document.getElementById("current-temp");
+        const weatherConditionEl = document.getElementById("weather-condition");
+        const highLowTempEl = document.getElementById("high-low-temp");
+
+        const humidityEl = document.getElementById("humidity");
+        const pressureEl = document.getElementById("pressure");
+        const visibilityEl = document.getElementById("visibility");
+        const uvIndexEl = document.getElementById("uv-index");
+
+        const forecastContainer = document.getElementById("forecast-container");
+
+        // --- ESTADO DE LA APLICACIÓN ---
+        let favorites = ["Asunción"];
+        let currentCity = null;
+
+        // --- DATOS MOCK (simulando una API) ---
+        const mockWeatherData = {
+          "san juan nepomuceno": {
+            current: {
+              city: "San Juan Nepomuceno, PY",
+              temp: 29,
+              condition: "Parcialmente Nublado",
+              icon: "cloud-sun",
+              high: 32,
+              low: 22,
+              humidity: 68,
+              pressure: 1012,
+              visibility: 10,
+              uv: "Alto",
+            },
+            forecast: [
+              { day: "Mañana", icon: "sun", temp: "33°" },
+              { day: "Miércoles", icon: "cloud", temp: "30°" },
+              { day: "Jueves", icon: "rain", temp: "28°" },
+              { day: "Viernes", icon: "cloud-sun", temp: "31°" },
+            ],
+          },
+          asunción: {
+            current: {
+              city: "Asunción, PY",
+              temp: 31,
+              condition: "Soleado",
+              icon: "sun",
+              high: 34,
+              low: 24,
+              humidity: 55,
+              pressure: 1015,
+              visibility: 15,
+              uv: "Extremo",
+            },
+            forecast: [
+              { day: "Mañana", icon: "sun", temp: "35°" },
+              { day: "Miércoles", icon: "sun", temp: "36°" },
+              { day: "Jueves", icon: "cloud-sun", temp: "33°" },
+              { day: "Viernes", icon: "rain", temp: "29°" },
+            ],
+          },
+          "buenos aires": {
+            current: {
+              city: "Buenos Aires, AR",
+              temp: 22,
+              condition: "Nublado",
+              icon: "cloud",
+              high: 24,
+              low: 18,
+              humidity: 80,
+              pressure: 1010,
+              visibility: 8,
+              uv: "Bajo",
+            },
+            forecast: [
+              { day: "Mañana", icon: "rain", temp: "21°" },
+              { day: "Miércoles", icon: "cloud", temp: "23°" },
+              { day: "Jueves", icon: "cloud", temp: "24°" },
+              { day: "Viernes", icon: "sun", temp: "26°" },
+            ],
+          },
+          "new york": {
+            current: {
+              city: "New York, US",
+              temp: 18,
+              condition: "Lluvia Ligera",
+              icon: "rain",
+              high: 20,
+              low: 15,
+              humidity: 88,
+              pressure: 1005,
+              visibility: 5,
+              uv: "Bajo",
+            },
+            forecast: [
+              { day: "Mañana", icon: "rain", temp: "19°" },
+              { day: "Miércoles", icon: "cloud-sun", temp: "22°" },
+              { day: "Jueves", icon: "sun", temp: "24°" },
+              { day: "Viernes", icon: "sun", temp: "25°" },
+            ],
+          },
+        };
+
+        const weatherIcons = {
+          sun: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>`,
+          cloud: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>`,
+          "cloud-sun": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-500"><path d="M12 12a4 4 0 0 0 4-4 1 1 0 0 0-2 0 2 2 0 0 1-2 2Z"></path><path d="M12 4V2"></path><path d="m16 6 1-1"></path><path d="M20 12h2"></path><path d="m16 18 1 1"></path><path d="M12 20v2"></path><path d="m8 18-1 1"></path><path d="M4 12H2"></path><path d="m8 6-1-1"></path><path d="M17.5 22H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>`,
+          rain: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><path d="M16 14v6"></path><path d="M8 14v6"></path><path d="M12 16v6"></path></svg>`,
+        };
+
+        // --- FUNCIONES ---
+
+        const getWeatherData = (city) => {
+          return new Promise((resolve, reject) => {
+            showLoader(true);
+            setTimeout(() => {
+              // Simula la demora de la red
+              const normalizedCity = city.toLowerCase().trim();
+              if (mockWeatherData[normalizedCity]) {
+                resolve(mockWeatherData[normalizedCity]);
+              } else {
+                reject(`No se encontraron datos para "${city}"`);
+              }
+            }, 1000);
+          });
+        };
+
+        const updateUI = (data) => {
+          const { current, forecast } = data;
+          currentCity = current.city;
+
+          // Header
+          cityNameEl.textContent = current.city;
+
+          // Principal
+          weatherIconMainEl.innerHTML =
+            weatherIcons[current.icon] || weatherIcons["cloud"];
+          currentTempEl.textContent = `${current.temp}°C`;
+          weatherConditionEl.textContent = current.condition;
+          highLowTempEl.textContent = `Max: ${current.high}° / Min: ${current.low}°`;
+
+          // Detalles
+          humidityEl.textContent = `Humedad: ${current.humidity}%`;
+          pressureEl.textContent = `Presión: ${current.pressure} hPa`;
+          visibilityEl.textContent = `Visibilidad: ${current.visibility} km`;
+          uvIndexEl.textContent = `Índice UV: ${current.uv}`;
+
+          // Pronóstico
+          forecastContainer.innerHTML = forecast
+            .map(
+              (f) => `
+                <div class="flex flex-col items-center gap-2">
+                    <span class="font-medium text-sm">${f.day}</span>
+                    <div class="w-10 h-10">${
+                      weatherIcons[f.icon] || weatherIcons["cloud"]
+                    }</div>
+                    <span class="font-bold">${f.temp}</span>
+                </div>
+            `
+            )
+            .join("");
+
+          updateFavoriteButton();
+          showLoader(false);
+        };
+
+        const renderFavorites = () => {
+          if (favorites.length === 0) {
+            favoritesList.innerHTML = `<p class="text-gray-500 text-sm">Aún no tienes favoritos. ¡Busca una ciudad y agrégala!</p>`;
+            return;
+          }
+          favoritesList.innerHTML = favorites
+            .map(
+              (fav) => `
+                <div class="favorite-item flex justify-between items-center p-3 bg-white/30 hover:bg-white/60 rounded-lg cursor-pointer transition" data-city="${fav}">
+                    <span class="font-medium">${fav}</span>
+                    <button class="remove-favorite text-gray-500 hover:text-red-500" data-city="${fav}">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                </div>
+            `
+            )
+            .join("");
+        };
+
+        const saveFavorites = () => {
+          localStorage.setItem(
+            "weatherAppFavorites",
+            JSON.stringify(favorites)
+          );
+        };
+
+        const loadFavorites = () => {
+          const storedFavorites = localStorage.getItem("weatherAppFavorites");
+          if (storedFavorites) {
+            favorites = JSON.parse(storedFavorites);
+          }
+          renderFavorites();
+        };
+
+        const updateFavoriteButton = () => {
+          const isFavorite = favorites.some(
+            (fav) =>
+              fav.toLowerCase() === currentCity.split(",")[0].toLowerCase()
+          );
+          const icon = addFavoriteBtn.querySelector("svg");
+          if (isFavorite) {
+            icon.style.fill = "crimson";
+            icon.style.stroke = "crimson";
+          } else {
+            icon.style.fill = "none";
+            icon.style.stroke = "currentColor";
+          }
+        };
+
+        const showLoader = (isLoading) => {
+          if (isLoading) {
+            weatherContent.classList.add("hidden");
+            errorMessage.classList.add("hidden");
+            loader.classList.remove("hidden");
+          } else {
+            loader.classList.add("hidden");
+            weatherContent.classList.remove("hidden");
+          }
+        };
+
+        const showError = (message) => {
+          weatherContent.classList.add("hidden");
+          loader.classList.add("hidden");
+          errorMessage.classList.remove("hidden");
+          errorText.textContent = message;
+        };
+
+        const handleSearch = (city) => {
+          getWeatherData(city)
+            .then(updateUI)
+            .catch((err) => showError(err));
+        };
+
+        const loadInitialCity = () => {
+          loadFavorites();
+          const initialCity =
+            favorites.length > 0 ? favorites[0] : "San Juan Nepomuceno";
+          handleSearch(initialCity);
+        };
+
+        const getLocationWeather = () => {
+          if (!navigator.geolocation) {
+            console.warn("Geolocalización no es soportada por este navegador.");
+            loadInitialCity(); // Carga la ciudad por defecto si la geolocalización no está disponible
+            return;
+          }
+
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              console.log(`Ubicación obtenida: ${latitude}, ${longitude}`);
+              // --- SIMULACIÓN DE REVERSE GEOCODING ---
+              // En una app real, aquí llamarías a una API para obtener el nombre de la ciudad
+              // a partir de las coordenadas. Para este demo, usaremos "Asunción" como resultado.
+              handleSearch("asunción");
+            },
+            (error) => {
+              console.error(`Error al obtener la ubicación: ${error.message}`);
+              // Si el usuario deniega el permiso o hay un error, carga la ciudad por defecto.
+              showError(
+                "No se pudo obtener tu ubicación. Mostrando ciudad por defecto."
+              );
+              setTimeout(() => {
+                loadInitialCity();
+              }, 2000);
+            }
+          );
+        };
+
+        // --- EVENT LISTENERS ---
+        searchForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const city = searchInput.value;
+          if (city) {
+            handleSearch(city);
+            searchInput.value = "";
+          }
+        });
+
+        addFavoriteBtn.addEventListener("click", () => {
+          const cityToAdd = currentCity.split(",")[0];
+          const cityIndex = favorites.findIndex(
+            (fav) => fav.toLowerCase() === cityToAdd.toLowerCase()
+          );
+
+          if (cityIndex > -1) {
+            // Si ya es favorito, lo quita
+            favorites.splice(cityIndex, 1);
+          } else {
+            // Si no, lo agrega
+            favorites.push(cityToAdd);
+          }
+          saveFavorites();
+          renderFavorites();
+          updateFavoriteButton();
+        });
+
+        favoritesList.addEventListener("click", (e) => {
+          const favoriteItem = e.target.closest(".favorite-item");
+          const removeBtn = e.target.closest(".remove-favorite");
+
+          if (removeBtn) {
+            const cityToRemove = removeBtn.dataset.city;
+            favorites = favorites.filter((fav) => fav !== cityToRemove);
+            saveFavorites();
+            renderFavorites();
+            updateFavoriteButton();
+            return;
+          }
+
+          if (favoriteItem) {
+            const city = favoriteItem.dataset.city;
+            handleSearch(city);
+          }
+        });
+
+        getLocationBtn.addEventListener("click", getLocationWeather);
+
+        // --- INICIALIZACIÓN ---
+        const init = () => {
+          getLocationWeather();
+
+          // Actualizar la hora cada segundo
+          setInterval(() => {
+            const now = new Date();
+            const options = {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            };
+            currentTimeEl.textContent = now.toLocaleDateString(
+              "es-ES",
+              options
+            );
+          }, 1000);
+        };
+
+        init();
+      });
+    </script>
+  </body>
+</html>
