@@ -85,7 +85,11 @@
             Ingresa tus credenciales para continuar
           </p>
 
-          <form action="#" method="POST">
+          <form
+            onsubmit="event.preventDefault(); login();"
+            action="#"
+            method="POST"
+          >
             <div class="space-y-4">
               <div>
                 <label
@@ -109,9 +113,9 @@
                     class="block text-sm font-medium text-gray-700"
                     >Contraseña</label
                   >
-                  <a href="#" class="text-sm text-blue-600 hover:underline"
+                  <!-- <a href="#" class="text-sm text-blue-600 hover:underline"
                     >¿Olvidé mi contraseña?</a
-                  >
+                  > -->
                 </div>
                 <input
                   type="password"
@@ -125,14 +129,27 @@
 
               <div>
                 <button
+                  id="loginBtn"
                   type="submit"
                   class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
-                  Iniciar Sesión
+                  <span
+                    class="spinner-border spinner-border-sm me-2 d-none"
+                    id="loginSpinner"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  <span id="loginText">Iniciar Sesión</span>
                 </button>
               </div>
             </div>
           </form>
+
+          <div
+            id="output"
+            class="hidden mt-4 p-3 rounded-lg border border-red-300 bg-red-50 text-red-800 text-sm font-medium"
+            role="alert"
+          ></div>
 
           <!-- Divisor "O continúa con" -->
           <div class="hidden flex items-center my-6">
@@ -198,14 +215,77 @@
     <script>
       // Aquí iría la lógica para manejar el envío del formulario.
       // Por ejemplo, conectar con Firebase, una API propia, etc.
+      let token = "";
+
+      const outputEl = document.getElementById("output");
+      const loginBtn = document.getElementById("loginBtn");
+      const spinner = document.getElementById("loginSpinner");
+      const loginText = document.getElementById("loginText");
+
       const form = document.querySelector("form");
       form.addEventListener("submit", (event) => {
         event.preventDefault(); // Evita que la página se recargue
         console.log("Formulario enviado");
-        const email = document.getElementById("email").value;
-        console.log("Email:", email);
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
         // Aquí se realizaría la llamada a la API de autenticación.
+
+        login(email, password);
       });
+
+      function setLoading(loading) {
+        if (loading) {
+          loginBtn.disabled = true;
+          spinner.classList.remove("d-none");
+          loginText.textContent = "Ingresando...";
+        } else {
+          loginBtn.disabled = false;
+          spinner.classList.add("d-none");
+          loginText.textContent = "Ingresar";
+        }
+      }
+
+      async function login(email, password) {
+        // limpiar mensajes previos
+        outputEl.classList.add("hidden");
+        outputEl.textContent = "";
+
+        if (!email || !password) {
+          outputEl.textContent = "Ingresá tu correo y contraseña.";
+          outputEl.classList.remove("hidden");
+          return;
+        }
+
+        try {
+          setLoading(true);
+          const res = await fetch("http://localhost:3000/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            token = data.token;
+            const userId = data.userId;
+            // Guardar token en localStorage
+            localStorage.setItem("token", token);
+            localStorage.setItem("userId", userId);
+            // Redirigir a reservas
+            window.location.href = "reserva.html";
+          } else {
+            const errorText = await res.text().error;
+            outputEl.textContent = errorText || "Error al iniciar sesión.";
+            outputEl.classList.remove("hidden");
+          }
+        } catch (err) {
+          outputEl.textContent = "Error de red. Verificá tu conexión.";
+          outputEl.classList.remove("hidden");
+        } finally {
+          setLoading(false);
+        }
+      }
     </script>
   </body>
 </html>
