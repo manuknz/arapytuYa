@@ -65,14 +65,12 @@ export async function getWeatherFor(city: string) {
 
   const weather = weatherResponse.data;
 
+  console.log("response weather data 2.5 = ", weather);
+
   return {
     found: true,
     location: `${name}, ${country}`,
-    date: new Date(weather.dt * 1000).toISOString().split("T")[0],
-    weathercode: weather.weather[0].id,
-    tmax: weather.main.temp_max,
-    tmin: weather.main.temp_min,
-    precipitation: 0,
+    weather,
   };
 }
 

@@ -103,19 +103,20 @@ function renderFavorites() {
 
 // --- WEATHER RENDER ---
 function renderWeather(data) {
+  console.log("Datos de clima recibidos:", data);
   // Adaptar estructura: asumo data.resultado style { found, ... } -> controller devuelve { data: resultado }
   // De la implementación backend, json.data contiene resultado (probable shape { found, message, location?, weather? })
   currentWeatherRaw = data;
   // Ajustes ficticios hasta ver formato real, usar placeholders si faltan campos
   const current = {
-    city: data?.location?.name || currentCity || "Desconocido",
-    temp: data?.weather?.temp ?? "--",
-    condition: data?.weather?.condition ?? "N/A",
+    city: data?.location || currentCity || "Desconocido",
+    temp: parseInt(data?.weather?.main?.temp) ?? "--",
+    condition: data?.weather?.weather[0]?.description ?? "N/A",
     icon: data?.weather?.iconKey || "cloud",
-    high: data?.weather?.max ?? "--",
-    low: data?.weather?.min ?? "--",
-    humidity: data?.weather?.humidity ?? "--",
-    pressure: data?.weather?.pressure ?? "--",
+    high: data?.weather?.main?.temp_max ?? "--",
+    low: data?.weather?.main?.temp_min ?? "--",
+    humidity: data?.weather?.main?.humidity ?? "--",
+    pressure: data?.weather?.main?.pressure ?? "--",
     visibility: data?.weather?.visibility ?? "--",
     uv: data?.weather?.uv ?? "--",
   };
@@ -159,15 +160,23 @@ function recomputeFavoritesIndex() {
 
 async function loadFavorites() {
   const userId = localStorage.getItem("userId");
-  if (!userId) return;
+  if (!userId) {
+    return;
+  }
   const result = await listFavorites(userId);
   if (result.ok) {
     favorites = result.data;
     recomputeFavoritesIndex();
     renderFavorites();
   } else {
-    console.warn("No se pudieron cargar favoritos:", result.error);
+    console.warn("[favorites] Error al cargar favoritos:", result.error);
   }
+}
+
+async function loadInitial() {
+  // Esta función ya no carga favoritos (se hace en init) para evitar doble fetch
+  const initial = favorites.length ? favorites[0].name : "Asunción";
+  handleSearch(initial);
 }
 
 async function toggleFavorite() {
@@ -224,6 +233,7 @@ function getLocationWeather() {
   navigator.geolocation.getCurrentPosition(
     (pos) => {
       // Placeholder: podrías llamar a endpoint de coordenadas si existe
+      console.log("Posición obtenida:", pos);
       handleSearch("Asunción");
     },
     (err) => {
@@ -234,12 +244,6 @@ function getLocationWeather() {
       setTimeout(loadInitial, 1500);
     }
   );
-}
-
-async function loadInitial() {
-  await loadFavorites();
-  const initial = favorites.length ? favorites[0].name : "Asunción";
-  handleSearch(initial);
 }
 
 // --- USER INFO ---
@@ -315,6 +319,11 @@ setInterval(() => {
 
 // INIT
 (function init() {
+  // 1. Cargar nombre de usuario
   loadUserName();
-  getLocationWeather();
+  // 2. Cargar favoritos primero para que la UI muestre la lista al inicio
+  loadFavorites().then(() => {
+    // 3. Intentar obtener ubicación; si falla se usa la primera favorita o Asunción
+    getLocationWeather();
+  });
 })();
