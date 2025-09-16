@@ -48,8 +48,9 @@ type GeoData = {
 
 export async function getWeatherFor(city: string) {
   // Primero, obtener las coordenadas de la ciudad
+  const ciudad = `${city}, PY`;
   const geoResponse = await axios.get<GeoData>(
-    `${geoUrl}/direct?q=${encodeURIComponent(city)}&limit=1&appid=${apiKey}`
+    `${geoUrl}/direct?q=${encodeURIComponent(ciudad)}&limit=1&appid=${apiKey}`
   );
 
   if (geoResponse.data.length === 0) {
