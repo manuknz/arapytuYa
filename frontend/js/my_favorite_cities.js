@@ -5,6 +5,7 @@ import {
   addFavorite,
   removeFavorite,
 } from "./services/favoritesService.js";
+import { getUserById } from "./services/userService.js";
 
 // --- ELEMENTOS DOM ---
 const searchForm = document.getElementById("search-form");
@@ -13,6 +14,7 @@ const getLocationBtn = document.getElementById("get-location-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const favoritesList = document.getElementById("favorites-list");
 const addFavoriteBtn = document.getElementById("add-favorite-btn");
+const userNameEl = document.getElementById("user-name");
 
 const loader = document.getElementById("loader");
 const errorMessage = document.getElementById("error-message");
@@ -240,6 +242,22 @@ async function loadInitial() {
   handleSearch(initial);
 }
 
+// --- USER INFO ---
+async function loadUserName() {
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    if (userNameEl) userNameEl.textContent = "Invitado";
+    return;
+  }
+  const result = await getUserById(userId);
+  console.log("Usuario cargado:", result);
+  if (result.ok) {
+    userNameEl.textContent = result.data.name || result.data.email || "Usuario";
+  } else {
+    userNameEl.textContent = "Usuario";
+  }
+}
+
 // --- EVENTOS ---
 searchForm?.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -297,5 +315,6 @@ setInterval(() => {
 
 // INIT
 (function init() {
+  loadUserName();
   getLocationWeather();
 })();

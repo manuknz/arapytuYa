@@ -21,6 +21,24 @@ export const getUsers = async (
   }
 };
 
+// Obtener user por ID
+export const getUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const user = await prisma.user.findUnique({ where: { id: Number(id) } });
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+    return res.json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Crear user
 export const createUser = async (
   req: Request,

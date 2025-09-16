@@ -3,6 +3,7 @@ import {
   createUser,
   deleteUser,
   filterUser,
+  getUserById,
   getUsers,
   ordenUser,
   paginacionUser,
@@ -13,6 +14,7 @@ import { verifyToken } from "../middlewares/auth";
 const router = Router();
 
 router.get("/users", verifyToken, getUsers);
+router.get("/users/:id", verifyToken, getUserById);
 router.post("/users", createUser);
 router.put("/users/:id", verifyToken, updateUser);
 router.delete("/users/:id", verifyToken, deleteUser);
