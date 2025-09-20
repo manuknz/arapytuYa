@@ -210,4 +210,135 @@ describe("Rutas de Usuario", () => {
     expect(response.status).toBe(403);
     expect(response.body).toHaveProperty("error", "Token requerido");
   });
+
+  // Caso de prueba para acceder a una ruta protegida con token inválido
+  it("Caso de prueba, acceder a ruta protegida con token inválido", async () => {
+    const response = await request(app)
+      .get("/api/users")
+      .set("Authorization", `Bearer token_invalido`);
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty("error", "Token inválido o expirado");
+  });
+
+  // Caso de prueba para filtrar usuarios por nombre
+  it("Caso de prueba, filtrar usuarios por nombre", async () => {
+    const email = `filtro_${Date.now()}@example.com`;
+    const password = "123456";
+    const token = await createUserAndLogin(email, password);
+
+    // Crear usuarios con nombres específicos
+    await request(app)
+      .post("/api/users")
+      .send({
+        name: "Ana María",
+        email: `ana_${Date.now()}@example.com`,
+        password,
+      });
+    await request(app)
+      .post("/api/users")
+      .send({
+        name: "Mariano",
+        email: `mariano_${Date.now()}@example.com`,
+        password,
+      });
+    await request(app)
+      .post("/api/users")
+      .send({
+        name: "Carlos",
+        email: `carlos_${Date.now()}@example.com`,
+        password,
+      });
+
+    const response = await request(app)
+      .get("/api/users/filter/mar")
+      .set("Authorization", `Bearer ${token}`);
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    // Debería retornar Ana María y Mariano
+    expect(response.body.length).toBeGreaterThanOrEqual(2);
+    const nombres = response.body.map((u: any) => u.name);
+    expect(nombres).toEqual(expect.arrayContaining(["Ana María", "Mariano"]));
+  });
+
+  // Caso de prueba para ordenar usuarios por nombre ascendente
+  //   it("Caso de prueba, ordenar usuarios por nombre ascendente", async () => {
+  //     const email = `ordenar_${Date.now()}@example.com`;
+  //     const password = "123456";
+  //     const token = await createUserAndLogin(email, password);
+
+  //     // Prefijo único para identificar solo los creados en este test
+  //     const prefix = `Sort_${Date.now()}_`;
+
+  //     // Crear usuarios con nombres específicos y prefijo
+  //     await request(app)
+  //       .post("/api/users")
+  //       .send({
+  //         name: `${prefix}Ana`,
+  //         email: `ana_${Date.now()}@example.com`,
+  //         password,
+  //       });
+  //     await request(app)
+  //       .post("/api/users")
+  //       .send({
+  //         name: `${prefix}Mariano`,
+  //         email: `mariano_${Date.now()}@example.com`,
+  //         password,
+  //       });
+  //     await request(app)
+  //       .post("/api/users")
+  //       .send({
+  //         name: `${prefix}Carlos`,
+  //         email: `carlos_${Date.now()}@example.com`,
+  //         password,
+  //       });
+
+  //     const response = await request(app)
+  //       .get(`/api/users/order?field=name&dir=asc`)
+  //       .set("Authorization", `Bearer ${token}`);
+  //     expect(response.status).toBe(200);
+  //     expect(Array.isArray(response.body)).toBe(true);
+
+  //     // Filtrar por los creados en este test y validar orden ascendente
+  //     const nombresFiltrados = response.body
+  //       .map((u: any) => u.name as string)
+  //       .filter((n: string) => n.startsWith(prefix));
+  //     expect(nombresFiltrados).toEqual([
+  //       `${prefix}Ana`,
+  //       `${prefix}Carlos`,
+  //       `${prefix}Mariano`,
+  //     ]);
+  //   });
+
+  // Caso de prueba para paginar usuarios
+  //   it("Caso de prueba, paginar usuarios", async () => {
+  //     const email = `paginacion_${Date.now()}@example.com`;
+  //     const password = "123456";
+  //     const token = await createUserAndLogin(email, password);
+
+  //     // Crear usuarios adicionales para la paginación
+  //     const baseTs = Date.now();
+  //     for (let i = 1; i <= 15; i++) {
+  //       await request(app)
+  //         .post("/api/users")
+  //         .send({
+  //           name: `Usuario ${i}`,
+  //           email: `usuario_${i}_${baseTs}@example.com`,
+  //           password,
+  //         });
+  //     }
+
+  //     const page = 1;
+  //     const pageSize = 10;
+  //     const response = await request(app)
+  //       .get(`/api/users/page?page=${page}&pageSize=${pageSize}`)
+  //       .set("Authorization", `Bearer ${token}`);
+  //     expect(response.status).toBe(200);
+
+  //     // Respuesta estructurada: { page, pageSize, total, totalPages, hasNext, hasPrev, data }
+  //     expect(response.body).toHaveProperty("page", page);
+  //     expect(response.body).toHaveProperty("pageSize", pageSize);
+  //     expect(response.body).toHaveProperty("data");
+  //     expect(Array.isArray(response.body.data)).toBe(true);
+  //     expect(response.body.data.length).toBeLessThanOrEqual(pageSize);
+  //   });
 });
