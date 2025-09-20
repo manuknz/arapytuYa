@@ -14,7 +14,7 @@ export const getUsers = async (
   next: NextFunction
 ) => {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({ where: { isActive: true } });
     res.json(users);
   } catch (error) {
     next(error);
@@ -98,8 +98,11 @@ export const deleteUser = async (
 ) => {
   try {
     const { id } = req.params;
-    await prisma.user.delete({ where: { id: Number(id) } });
-    res.json({ message: "Usuario eliminado correctamente" });
+    const user = await prisma.user.update({
+      where: { id: Number(id) },
+      data: { isActive: false },
+    });
+    res.json({ message: "Usuario marcado como inactivo", user });
   } catch (error) {
     next(error);
   }
@@ -116,6 +119,7 @@ export const filterUser = async (
     const { nombre } = req.params;
     const listadoUser = await prisma.user.findMany({
       where: {
+        isActive: true,
         name: {
           contains: nombre,
           mode: "insensitive",
@@ -136,6 +140,7 @@ export const ordenUser = async (
 ) => {
   try {
     const listadoUserOrdenado = await prisma.user.findMany({
+      where: { isActive: true },
       orderBy: getOrderBy(req),
     });
     res.json(listadoUserOrdenado);
@@ -160,9 +165,11 @@ export const paginacionUser = async (
     const skip = (page - 1) * pageSize;
 
     // Use a stable ordering for consistent pagination
+    const where = { isActive: true } as const;
     const [total, users] = await prisma.$transaction([
-      prisma.user.count(),
+      prisma.user.count({ where }),
       prisma.user.findMany({
+        where,
         skip,
         take: pageSize,
         orderBy: getOrderBy(req),
