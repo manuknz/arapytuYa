@@ -24,6 +24,7 @@ app.use(
   })
 );
 
+// Frontend estático (compilado corre desde dist/, el frontend queda un nivel arriba)
 // Servir frontend estático (mismo origen http://localhost:3000)
 const staticDir = path.resolve(__dirname, "../frontend");
 app.use(express.static(staticDir));

@@ -5,6 +5,9 @@
   "main": "app.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn src/server.ts",
+    "dev2": "nodemon src/server.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
     "test": "jest"
   },
   "repository": {
@@ -37,9 +40,11 @@
     "@types/node": "^24.3.0",
     "@types/supertest": "^6.0.3",
     "jest": "^29.7.0",
+    "nodemon": "^3.1.10",
     "prisma": "^6.15.0",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.2",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.2"
   }
