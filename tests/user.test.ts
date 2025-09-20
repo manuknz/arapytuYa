@@ -261,53 +261,53 @@ describe("Rutas de Usuario", () => {
   });
 
   // Caso de prueba para ordenar usuarios por nombre ascendente
-  //   it("Caso de prueba, ordenar usuarios por nombre ascendente", async () => {
-  //     const email = `ordenar_${Date.now()}@example.com`;
-  //     const password = "123456";
-  //     const token = await createUserAndLogin(email, password);
+  it("Caso de prueba, ordenar usuarios por nombre ascendente", async () => {
+    const email = `ordenar_${Date.now()}@example.com`;
+    const password = "123456";
+    const token = await createUserAndLogin(email, password);
 
-  //     // Prefijo único para identificar solo los creados en este test
-  //     const prefix = `Sort_${Date.now()}_`;
+    // Prefijo único para identificar solo los creados en este test
+    const prefix = `Sort_${Date.now()}_`;
 
-  //     // Crear usuarios con nombres específicos y prefijo
-  //     await request(app)
-  //       .post("/api/users")
-  //       .send({
-  //         name: `${prefix}Ana`,
-  //         email: `ana_${Date.now()}@example.com`,
-  //         password,
-  //       });
-  //     await request(app)
-  //       .post("/api/users")
-  //       .send({
-  //         name: `${prefix}Mariano`,
-  //         email: `mariano_${Date.now()}@example.com`,
-  //         password,
-  //       });
-  //     await request(app)
-  //       .post("/api/users")
-  //       .send({
-  //         name: `${prefix}Carlos`,
-  //         email: `carlos_${Date.now()}@example.com`,
-  //         password,
-  //       });
+    // Crear usuarios con nombres específicos y prefijo
+    await request(app)
+      .post("/api/users")
+      .send({
+        name: `${prefix}Ana`,
+        email: `ana_${Date.now()}@example.com`,
+        password,
+      });
+    await request(app)
+      .post("/api/users")
+      .send({
+        name: `${prefix}Mariano`,
+        email: `mariano_${Date.now()}@example.com`,
+        password,
+      });
+    await request(app)
+      .post("/api/users")
+      .send({
+        name: `${prefix}Carlos`,
+        email: `carlos_${Date.now()}@example.com`,
+        password,
+      });
 
-  //     const response = await request(app)
-  //       .get(`/api/users/order?field=name&dir=asc`)
-  //       .set("Authorization", `Bearer ${token}`);
-  //     expect(response.status).toBe(200);
-  //     expect(Array.isArray(response.body)).toBe(true);
+    const response = await request(app)
+      .get(`/api/users/order?field=name&dir=asc`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
 
-  //     // Filtrar por los creados en este test y validar orden ascendente
-  //     const nombresFiltrados = response.body
-  //       .map((u: any) => u.name as string)
-  //       .filter((n: string) => n.startsWith(prefix));
-  //     expect(nombresFiltrados).toEqual([
-  //       `${prefix}Ana`,
-  //       `${prefix}Carlos`,
-  //       `${prefix}Mariano`,
-  //     ]);
-  //   });
+    // Filtrar por los creados en este test y validar orden ascendente
+    const nombresFiltrados = response.body
+      .map((u: any) => u.name as string)
+      .filter((n: string) => n.startsWith(prefix));
+    expect(nombresFiltrados).toEqual([
+      `${prefix}Ana`,
+      `${prefix}Carlos`,
+      `${prefix}Mariano`,
+    ]);
+  });
 
   // Caso de prueba para paginar usuarios
   //   it("Caso de prueba, paginar usuarios", async () => {
