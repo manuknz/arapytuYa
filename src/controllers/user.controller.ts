@@ -29,7 +29,11 @@ export const getUserById = async (
 ) => {
   try {
     const { id } = req.params;
-    const user = await prisma.user.findUnique({ where: { id: Number(id) } });
+    const numId = Number(id);
+    if (!Number.isFinite(numId) || numId <= 0) {
+      return res.status(400).json({ message: "ID inválido" });
+    }
+    const user = await prisma.user.findUnique({ where: { id: numId } });
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
