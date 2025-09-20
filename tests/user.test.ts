@@ -310,35 +310,35 @@ describe("Rutas de Usuario", () => {
   });
 
   // Caso de prueba para paginar usuarios
-  //   it("Caso de prueba, paginar usuarios", async () => {
-  //     const email = `paginacion_${Date.now()}@example.com`;
-  //     const password = "123456";
-  //     const token = await createUserAndLogin(email, password);
+  it("Caso de prueba, paginar usuarios", async () => {
+    const email = `paginacion_${Date.now()}@example.com`;
+    const password = "123456";
+    const token = await createUserAndLogin(email, password);
 
-  //     // Crear usuarios adicionales para la paginación
-  //     const baseTs = Date.now();
-  //     for (let i = 1; i <= 15; i++) {
-  //       await request(app)
-  //         .post("/api/users")
-  //         .send({
-  //           name: `Usuario ${i}`,
-  //           email: `usuario_${i}_${baseTs}@example.com`,
-  //           password,
-  //         });
-  //     }
+    // Crear usuarios adicionales para la paginación
+    const baseTs = Date.now();
+    for (let i = 1; i <= 15; i++) {
+      await request(app)
+        .post("/api/users")
+        .send({
+          name: `Usuario ${i}`,
+          email: `usuario_${i}_${baseTs}@example.com`,
+          password,
+        });
+    }
 
-  //     const page = 1;
-  //     const pageSize = 10;
-  //     const response = await request(app)
-  //       .get(`/api/users/page?page=${page}&pageSize=${pageSize}`)
-  //       .set("Authorization", `Bearer ${token}`);
-  //     expect(response.status).toBe(200);
+    const page = 1;
+    const pageSize = 10;
+    const response = await request(app)
+      .get(`/api/users/page?page=${page}&pageSize=${pageSize}`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(response.status).toBe(200);
 
-  //     // Respuesta estructurada: { page, pageSize, total, totalPages, hasNext, hasPrev, data }
-  //     expect(response.body).toHaveProperty("page", page);
-  //     expect(response.body).toHaveProperty("pageSize", pageSize);
-  //     expect(response.body).toHaveProperty("data");
-  //     expect(Array.isArray(response.body.data)).toBe(true);
-  //     expect(response.body.data.length).toBeLessThanOrEqual(pageSize);
-  //   });
+    // Respuesta estructurada: { page, pageSize, total, totalPages, hasNext, hasPrev, data }
+    expect(response.body).toHaveProperty("page", page);
+    expect(response.body).toHaveProperty("pageSize", pageSize);
+    expect(response.body).toHaveProperty("data");
+    expect(Array.isArray(response.body.data)).toBe(true);
+    expect(response.body.data.length).toBeLessThanOrEqual(pageSize);
+  });
 });
